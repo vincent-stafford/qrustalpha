@@ -115,6 +115,16 @@ impl SingleQuantumGate {
             toffoli: (BitType::None, BitType::None),
         }
     }
+
+    pub fn cnot(cond_bit: BitType, target: BitType) -> Self {
+        Self {
+            matrix_operation: PAULI_X,
+            operation_target: target,
+            conditional: cond_bit,
+            toffoli: (BitType::None, BitType::None),
+        }
+    }
+
 }
 
 fn execute_conditonal_toffoli(gate: &SingleQuantumGate, system: StateVec, toffoli_index_1: usize, toffoli_index_2: usize, target_index: usize, cond_bit_index: usize) -> StateVec {
