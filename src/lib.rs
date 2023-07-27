@@ -3,15 +3,18 @@ use rand::Rng;
 use std::f64::consts::FRAC_1_SQRT_2;
 
 ///This is a public type declaration used for any single-qubit gate.
-pub type SingleGateMatrix = SMatrix<f64, 2, 2>;
+pub type SingleGateMatrix = SMatrix<Complex<f64>, 2, 2>;
 ///The Pauli X gate represents a 180-degree rotation along the X axis on a Bloch Sphere. With |0> and |1> a basis states, starting from |0> and applying a Pauli-X gate would indicate a collapse to |1> with 100% probability.
-pub const PAULI_X: SingleGateMatrix = SingleGateMatrix::new(0.0, 1.0, 1.0, 0.0);
+pub const PAULI_X: SingleGateMatrix = SingleGateMatrix::new(Complex::new(0.0, 0.0), Complex::new(1.0, 0.0),
+                                                            Complex::new(1.0, 0.0), Complex::new(0.0, 0.0));
 ///Pauli Y
-pub const PAULI_Y: SingleGateMatrix = SingleGateMatrix::new(0.0, -1.0, 1.0, 0.0);
+pub const PAULI_Y: SingleGateMatrix = SingleGateMatrix::new(Complex::new(0.0, 0.0), Complex::new(0.0, -1.0),
+                                                            Complex::new(0.0, 1.0), Complex::new(0.0, 0.0));
 ///Pauli Z
-pub const PAULI_Z: SingleGateMatrix = SingleGateMatrix::new(1.0, 0.0, 0.0, -1.0);
+pub const PAULI_Z: SingleGateMatrix = SingleGateMatrix::new(Complex::new(1.0, 0.0), Complex::new(0.0, 0.0), Complex::new(0.0, 0.0), Complex::new(-1.0, 0.0));
 //Hadamard Gate
-pub const HADAMARD_GATE: SingleGateMatrix = SingleGateMatrix::new(1.0 * FRAC_1_SQRT_2, 1.0 * FRAC_1_SQRT_2, 1.0 * FRAC_1_SQRT_2, -1.0 * FRAC_1_SQRT_2);
+pub const HADAMARD_GATE: SingleGateMatrix = SingleGateMatrix::new(Complex::new(1.0 * FRAC_1_SQRT_2, 0.0), Complex::new(1.0 * FRAC_1_SQRT_2, 0.0), 
+                                                                  Complex::new(1.0 * FRAC_1_SQRT_2, 0.0), Complex::new(-1.0 * FRAC_1_SQRT_2, 0.0));
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum BitType {
@@ -22,14 +25,14 @@ pub enum BitType {
 
 #[derive(Clone, Debug)]
 pub struct StateVec {
-    pub qubits: Vec<Vector2<f64>>,
+    pub qubits: Vec<Vector2<Complex<f64>>>,
     pub cbits: Vec<i8>
 }
 
 impl StateVec {
     ///Returns a System initialized with all zeros of a specified length. 
     pub fn init(q: usize, c: usize) -> StateVec {
-        StateVec {qubits: vec![Vector2::new(1.0, 0.0); q], cbits: vec![0; c]}
+        StateVec {qubits: vec![Vector2::new(Complex::new(1.0, 0.0), Complex::new(0.0, 0.0)); q], cbits: vec![0; c]}
     }
 
     /* TODO */
@@ -37,28 +40,29 @@ impl StateVec {
 
     ///Copies any collapsed qubit to any classical register. Panics if a superposition is copied.
     pub fn copy_to_classical_bit(&self, q: usize, c: usize) -> StateVec {
-        if self.qubits[q].x != 0.0 && self.qubits[q].x != 1.0 || self.qubits[q].y != 0.0 && self.qubits[q].y != 1.0 {
+        if self.qubits[q].x.re != 0.0 && self.qubits[q].x.re != 1.0 || self.qubits[q].y.re != 0.0 && self.qubits[q].y.re != 1.0 {
             panic!("You can not copy a Qubit in superposition to a classical register.");
         }
         let mut return_vector = self.clone();
-        if return_vector.qubits[q].x == 1.0 {
+        if return_vector.qubits[q].x.re == 1.0 {
             return_vector.cbits[c] = 0;
         } else {
             return_vector.cbits[c] = 1;
         }
         return_vector
     }
+    
 
-    ///Collapses a single Qubit and returns a new Quantum State with the collapsed state.
+    //Collapses a single Qubit and returns a new Quantum State with the collapsed state.
     pub fn single_collapse(&self, q: usize) -> StateVec {
         let range: f64 = rand::thread_rng().gen_range(0.0..1.0);
         let mut return_vector = self.clone();
-        if range > return_vector.qubits[q].x {
-            return_vector.qubits[q].x = 1.0;
-            return_vector.qubits[q].y = 0.0;
+        if range > return_vector.qubits[q].x.norm_sqr() {
+            return_vector.qubits[q].x = Complex::new(1.0, 0.0);
+            return_vector.qubits[q].y = Complex::new(0.0, 0.0);
         } else {
-            return_vector.qubits[q].x = 0.0;
-            return_vector.qubits[q].y = 1.0;
+            return_vector.qubits[q].x = Complex::new(0.0, 0.0);
+            return_vector.qubits[q].y = Complex::new(1.0, 0.0);
         }
         return_vector
         
@@ -129,7 +133,7 @@ impl SingleQuantumGate {
 
 fn execute_conditonal_toffoli(gate: &SingleQuantumGate, system: StateVec, toffoli_index_1: usize, toffoli_index_2: usize, target_index: usize, cond_bit_index: usize) -> StateVec {
     let mut return_vec: StateVec = system.clone(); //I think I need to do the euclidian norm here somehwere. 
-    if system.single_collapse(toffoli_index_1).qubits[toffoli_index_1].y == 1.0 && system.single_collapse(toffoli_index_2).qubits[toffoli_index_2].y == 1.0 && system.cbits[cond_bit_index] == 1 {
+    if system.single_collapse(toffoli_index_1).qubits[toffoli_index_1].y.re == 1.0 && system.single_collapse(toffoli_index_2).qubits[toffoli_index_2].y.re == 1.0 && system.cbits[cond_bit_index] == 1 {
         return_vec.qubits[target_index] = gate.matrix_operation * return_vec.qubits[target_index];
     }
     return_vec
@@ -137,7 +141,7 @@ fn execute_conditonal_toffoli(gate: &SingleQuantumGate, system: StateVec, toffol
 
 fn execute_toffoli(gate: &SingleQuantumGate, system: StateVec, toffoli_index_1: usize, toffoli_index_2: usize, target_index: usize) -> StateVec {
     let mut return_vec: StateVec = system.clone(); //I think I need to do the euclidian norm here somehwere. 
-    if system.single_collapse(toffoli_index_1).qubits[toffoli_index_1].y == 1.0 && system.single_collapse(toffoli_index_2).qubits[toffoli_index_2].y == 1.0 {
+    if system.single_collapse(toffoli_index_1).qubits[toffoli_index_1].y.re == 1.0 && system.single_collapse(toffoli_index_2).qubits[toffoli_index_2].y.re == 1.0 {
         return_vec.qubits[target_index] = gate.matrix_operation * return_vec.qubits[target_index];
     }
     return_vec
@@ -153,7 +157,7 @@ fn execute_classical_cnot(gate: &SingleQuantumGate, system: StateVec, target_ind
 
 fn execute_quantum_cnot(gate: &SingleQuantumGate, system: StateVec, target_index: usize, cond_bit_index: usize) -> StateVec {
     let mut return_vec: StateVec = system.clone(); //I think I need to do the euclidian norm here somehwere. 
-    if system.single_collapse(cond_bit_index).qubits[cond_bit_index].y == 1.0 {
+    if system.single_collapse(cond_bit_index).qubits[cond_bit_index].y.re == 1.0 {
         return_vec.qubits[target_index] = gate.matrix_operation * return_vec.qubits[target_index];
     }
     return_vec
