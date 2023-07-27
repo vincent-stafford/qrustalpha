@@ -201,3 +201,5 @@ pub fn execute_gate(gate: SingleQuantumGate, system: StateVec) -> StateVec {
 mod tests {
 
 }
+
+print!("Test");
