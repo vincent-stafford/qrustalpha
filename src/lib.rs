@@ -57,7 +57,7 @@ impl StateVec {
         self.q_is_in_bounds(q);
         let range: f64 = rand::thread_rng().gen_range(0.0..1.0);
         let mut return_vector = self.clone();
-        if range < return_vector.qubits[q].x.norm_sqr() as f64 {
+        if range < return_vector.qubits[q].x.re { //NOTE TO SELF: VALIDATE THIS FURTHER
             return_vector.qubits[q].x = Complex::new(1.0, 0.0);
             return_vector.qubits[q].y = Complex::new(0.0, 0.0);
         } else {
@@ -74,7 +74,7 @@ impl std::fmt::Display for StateVec {
         write!(f, "(Quantum Bits: {:?}, Classical Bits: {:?})", self.qubits, self.cbits)
     }
 }
-
+//NOTE TO SELF: VALIDATE return_vec.qubits[target_index] = return_vec.qubits[target_index].map(|x| x.powf(2.0)) ASAP
 fn execute_conditonal_toffoli(gate: &gates::SingleQuantumGate, system: StateVec, toffoli_index_1: usize, toffoli_index_2: usize, target_index: usize, cond_bit_index: usize) -> StateVec {
     let mut return_vec: StateVec = system.clone(); //I think I need to do the euclidian norm here somehwere. 
     if system.single_collapse(toffoli_index_1).qubits[toffoli_index_1].y.re == 1.0 && system.single_collapse(toffoli_index_2).qubits[toffoli_index_2].y.re == 1.0 && system.cbits[cond_bit_index] == 1 {
@@ -87,6 +87,7 @@ fn execute_toffoli(gate: &gates::SingleQuantumGate, system: StateVec, toffoli_in
     let mut return_vec: StateVec = system.clone(); //I think I need to do the euclidian norm here somehwere. 
     if system.single_collapse(toffoli_index_1).qubits[toffoli_index_1].y.re == 1.0 && system.single_collapse(toffoli_index_2).qubits[toffoli_index_2].y.re == 1.0 {
         return_vec.qubits[target_index] = gate.matrix_operation * return_vec.qubits[target_index];
+        return_vec.qubits[target_index] = return_vec.qubits[target_index].map(|x| x.powf(2.0));
     }
     return_vec
 }
@@ -95,6 +96,7 @@ fn execute_classical_cnot(gate: &gates::SingleQuantumGate, system: StateVec, tar
     let mut return_vec: StateVec = system.clone(); //I think I need to do the euclidian norm here somehwere. 
     if system.cbits[cond_bit_index] == 1 {
         return_vec.qubits[target_index] = gate.matrix_operation * return_vec.qubits[target_index];
+        return_vec.qubits[target_index] = return_vec.qubits[target_index].map(|x| x.powf(2.0));
     }
     return_vec
 }
@@ -103,6 +105,7 @@ fn execute_quantum_cnot(gate: &gates::SingleQuantumGate, system: StateVec, targe
     let mut return_vec: StateVec = system.clone(); //I think I need to do the euclidian norm here somehwere. 
     if system.single_collapse(cond_bit_index).qubits[cond_bit_index].y.re == 1.0 {
         return_vec.qubits[target_index] = gate.matrix_operation * return_vec.qubits[target_index];
+        return_vec.qubits[target_index] = return_vec.qubits[target_index].map(|x| x.powf(2.0));
     }
     return_vec
 }
@@ -110,6 +113,7 @@ fn execute_quantum_cnot(gate: &gates::SingleQuantumGate, system: StateVec, targe
 fn execute_single_qubit_gate(gate: &gates::SingleQuantumGate, system: StateVec, target_index: usize) -> StateVec {
     let mut return_vec: StateVec = system.clone(); //I think I need to do the euclidian norm here somehwere. 
     return_vec.qubits[target_index] = gate.matrix_operation * return_vec.qubits[target_index];
+    return_vec.qubits[target_index] = return_vec.qubits[target_index].map(|x| x.powf(2.0));
     return_vec
 }
 

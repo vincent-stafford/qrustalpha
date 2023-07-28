@@ -1,4 +1,4 @@
-use std::f64::consts::{FRAC_1_SQRT_2, PI, E};
+use std::f64::consts::{PI, E, FRAC_1_SQRT_2};
 use crate::*;
 use lazy_static::lazy_static;
 
