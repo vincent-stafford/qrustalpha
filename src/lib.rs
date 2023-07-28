@@ -1,22 +1,7 @@
 use nalgebra::*;
 use rand::Rng;
-use std::f64::consts::FRAC_1_SQRT_2;
 
 pub mod gates;
-
-///This is a public type declaration used for any single-qubit gate.
-pub type SingleGateMatrix = SMatrix<Complex<f64>, 2, 2>;
-///The Pauli X gate represents a 180-degree rotation along the X axis on a Bloch Sphere. With |0> and |1> a basis states, starting from |0> and applying a Pauli-X gate would indicate a collapse to |1> with 100% probability.
-pub const PAULI_X: SingleGateMatrix = SingleGateMatrix::new(Complex::new(0.0, 0.0), Complex::new(1.0, 0.0),
-                                                            Complex::new(1.0, 0.0), Complex::new(0.0, 0.0));
-///Pauli Y
-pub const PAULI_Y: SingleGateMatrix = SingleGateMatrix::new(Complex::new(0.0, 0.0), Complex::new(0.0, -1.0),
-                                                            Complex::new(0.0, 1.0), Complex::new(0.0, 0.0));
-///Pauli Z
-pub const PAULI_Z: SingleGateMatrix = SingleGateMatrix::new(Complex::new(1.0, 0.0), Complex::new(0.0, 0.0), Complex::new(0.0, 0.0), Complex::new(-1.0, 0.0));
-//Hadamard Gate
-pub const HADAMARD_GATE: SingleGateMatrix = SingleGateMatrix::new(Complex::new(1.0 * FRAC_1_SQRT_2, 0.0), Complex::new(1.0 * FRAC_1_SQRT_2, 0.0), 
-                                                                  Complex::new(1.0 * FRAC_1_SQRT_2, 0.0), Complex::new(-1.0 * FRAC_1_SQRT_2, 0.0));
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum BitType {
