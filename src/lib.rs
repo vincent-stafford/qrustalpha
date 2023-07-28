@@ -59,7 +59,7 @@ impl StateVec {
     pub fn single_collapse(&self, q: usize) -> StateVec {
         let range: f64 = rand::thread_rng().gen_range(0.0..1.0);
         let mut return_vector = self.clone();
-        if range > return_vector.qubits[q].x.norm_sqr() {
+        if range < return_vector.qubits[q].x.norm_sqr() as f64 {
             return_vector.qubits[q].x = Complex::new(1.0, 0.0);
             return_vector.qubits[q].y = Complex::new(0.0, 0.0);
         } else {
