@@ -2,7 +2,7 @@ use nalgebra::*;
 use rand::Rng;
 use std::f64::consts::FRAC_1_SQRT_2;
 
-mod gates;
+pub mod gates;
 
 ///This is a public type declaration used for any single-qubit gate.
 pub type SingleGateMatrix = SMatrix<Complex<f64>, 2, 2>;
