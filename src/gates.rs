@@ -1,20 +1,29 @@
 use std::f64::consts::{FRAC_1_SQRT_2, PI, E};
 use crate::*;
+use lazy_static::lazy_static;
 
 ///This is a public type declaration used for any single-qubit gate.
 pub type SingleGateMatrix = SMatrix<Complex<f64>, 2, 2>;
-///The Pauli X gate represents a 180-degree rotation along the X axis on a Bloch Sphere. With |0> and |1> a basis states, starting from |0> and applying a Pauli-X gate would indicate a collapse to |1> with 100% probability.
-pub const PAULI_X: SingleGateMatrix = SingleGateMatrix::new(Complex::new(0.0, 0.0), Complex::new(1.0, 0.0),
-                                                            Complex::new(1.0, 0.0), Complex::new(0.0, 0.0));
-///Pauli Y
-pub const PAULI_Y: SingleGateMatrix = SingleGateMatrix::new(Complex::new(0.0, 0.0), Complex::new(0.0, -1.0),
-                                                            Complex::new(0.0, 1.0), Complex::new(0.0, 0.0));
-///Pauli Z
-pub const PAULI_Z: SingleGateMatrix = SingleGateMatrix::new(Complex::new(1.0, 0.0), Complex::new(0.0, 0.0), Complex::new(0.0, 0.0), Complex::new(-1.0, 0.0));
 
-//Hadamard Gate
-pub const HADAMARD_GATE: SingleGateMatrix = SingleGateMatrix::new(Complex::new(1.0 * FRAC_1_SQRT_2, 0.0), Complex::new(1.0 * FRAC_1_SQRT_2, 0.0), 
-                                                                  Complex::new(1.0 * FRAC_1_SQRT_2, 0.0), Complex::new(-1.0 * FRAC_1_SQRT_2, 0.0));
+
+lazy_static! {
+    ///The Pauli X gate represents a 180-degree rotation along the X axis on a Bloch Sphere. With |0> and |1> a basis states, starting from |0> and applying a Pauli-X gate would indicate a collapse to |1> with 100% probability.
+    pub static ref PAULI_X: SingleGateMatrix = SingleGateMatrix::new(Complex::new(0.0, 0.0), Complex::new(1.0, 0.0),
+                                                                     Complex::new(1.0, 0.0), Complex::new(0.0, 0.0));
+    ///Pauli Y
+    pub static ref PAULI_Y: SingleGateMatrix = SingleGateMatrix::new(Complex::new(0.0, 0.0), Complex::new(0.0, -1.0),
+                                                                     Complex::new(0.0, 1.0), Complex::new(0.0, 0.0));                                            
+    ///The T phase shift gate rotates the relative phase of a state vector by PI / 4 radians. 
+    pub static ref T_GATE: SingleGateMatrix = SingleGateMatrix::new(Complex::new(1.0, 0.0), Complex::new(0.0, 0.0), 
+                                                                    Complex::new(0.0, 0.0), Complex::new(0.0, E.powf(PI/4.0)));
+    ///Pauli Z
+    pub static ref PAULI_Z: SingleGateMatrix = SingleGateMatrix::new(Complex::new(1.0, 0.0), Complex::new(0.0, 0.0), Complex::new(0.0, 0.0), Complex::new(-1.0, 0.0));
+
+    ///Hadamard Gate
+    pub static ref HADAMARD_GATE: SingleGateMatrix = SingleGateMatrix::new(Complex::new(1.0, 0.0), Complex::new(1.0, 0.0), Complex::new(1.0, 0.0), Complex::new(-1.0, 0.0)) * Complex::new(FRAC_1_SQRT_2, 0.0);
+
+}
+
 
 
 pub struct SingleQuantumGate {
@@ -28,7 +37,7 @@ impl SingleQuantumGate {
     ///This creates a PauliX gate. The argument takes the BitType enum and represents the index of the target qubit.
     pub fn paulix(target: BitType) -> Self {
         Self {
-            matrix_operation: PAULI_X,
+            matrix_operation: *PAULI_X,
             operation_target: target,
             conditional: BitType::None,
             toffoli: (BitType::None, BitType::None),
@@ -38,7 +47,7 @@ impl SingleQuantumGate {
     ///This creates a PauliY gate. The argument takes the BitType enum and represents the index of the target qubit.
     pub fn pauliy(target: BitType) -> Self {
         Self {
-            matrix_operation: PAULI_Y,
+            matrix_operation: *PAULI_Y,
             operation_target: target,
             conditional: BitType::None,
             toffoli: (BitType::None, BitType::None),
@@ -48,7 +57,7 @@ impl SingleQuantumGate {
     ///This creates a PauliZ gate. The argument takes the BitType enum and represents the index of the target qubit.
     pub fn pauliz(target: BitType) -> Self {
         Self {
-            matrix_operation: PAULI_Z,
+            matrix_operation: *PAULI_Z,
             operation_target: target,
             conditional: BitType::None,
             toffoli: (BitType::None, BitType::None),
@@ -59,7 +68,7 @@ impl SingleQuantumGate {
     ///This creates a Hadamard gate. The argument takes the BitType enum and represents the index of the target qubit.
     pub fn hadamard(target: BitType) -> Self { /*!!TODO!! FIX THE HADAMARD GATE THE PROBABILITIES ARE NOT RIGHT!!!!!*/
         Self {
-            matrix_operation: HADAMARD_GATE,
+            matrix_operation: *HADAMARD_GATE,
             operation_target: target,
             conditional: BitType::None,
             toffoli: (BitType::None, BitType::None),
@@ -69,7 +78,7 @@ impl SingleQuantumGate {
     ///This creates a standard CNOT/CX gate. The argument takes two arguments. The first one is the index of the control bit. The second is the target Qubit.
     pub fn cnot(cond_bit: BitType, target: BitType) -> Self {
         Self {
-            matrix_operation: PAULI_X,
+            matrix_operation: *PAULI_X,
             operation_target: target,
             conditional: cond_bit,
             toffoli: (BitType::None, BitType::None),
@@ -78,7 +87,7 @@ impl SingleQuantumGate {
 
     pub fn t_gate(target: BitType) -> Self {
         Self {
-            matrix_operation: SingleGateMatrix::new(Complex::new(1.0, 0.0), Complex::new(0.0, 0.0), Complex::new(0.0, 0.0), Complex::new(0.0, E.powf(PI/4.0))),
+            matrix_operation: *T_GATE, 
             operation_target: target,
             conditional: BitType::None,
             toffoli: (BitType::None, BitType::None),
