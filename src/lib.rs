@@ -39,9 +39,22 @@ impl StateVec {
 
     /* TODO */
     //Make function that sanity checks Q and C
+    fn q_is_in_bounds(&self, q: usize) {
+        if self.qubits.len() < q {
+            panic!("Your qubit index is greater than the amount of qubits in your system.");
+        }
+    }
+
+    fn c_is_in_bounds(&self, c: usize) {
+        if self.cbits.len() < c {
+            panic!("Your classical bit index is greater than the amount of classical bits in your system.");
+        }
+    }
 
     ///Copies any collapsed qubit to any classical register. Panics if a superposition is copied.
     pub fn copy_to_classical_bit(&self, q: usize, c: usize) -> StateVec {
+        self.q_is_in_bounds(q);
+        self.c_is_in_bounds(c);
         if self.qubits[q].x.re != 0.0 && self.qubits[q].x.re != 1.0 || self.qubits[q].y.re != 0.0 && self.qubits[q].y.re != 1.0 {
             panic!("You can not copy a Qubit in superposition to a classical register.");
         }
@@ -53,10 +66,10 @@ impl StateVec {
         }
         return_vector
     }
-    
 
-    //Collapses a single Qubit and returns a new Quantum State with the collapsed state.
+    ///Collapses a single Qubit and returns a new Quantum State with the collapsed state.
     pub fn single_collapse(&self, q: usize) -> StateVec {
+        self.q_is_in_bounds(q);
         let range: f64 = rand::thread_rng().gen_range(0.0..1.0);
         let mut return_vector = self.clone();
         if range < return_vector.qubits[q].x.norm_sqr() as f64 {
