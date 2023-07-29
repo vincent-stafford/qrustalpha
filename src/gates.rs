@@ -71,7 +71,7 @@ impl SingleQuantumGate {
             matrix_operation: *HADAMARD_GATE,
             operation_target: target,
             conditional: BitType::None,
-            toffoli: (BitType::None, BitType::None),
+            toffoli: (BitType::None, BitType::None)
         }
     }
 
@@ -81,7 +81,16 @@ impl SingleQuantumGate {
             matrix_operation: *PAULI_X,
             operation_target: target,
             conditional: cond_bit,
-            toffoli: (BitType::None, BitType::None),
+            toffoli: (BitType::None, BitType::None)
+        }
+    }
+
+    pub fn toffoli(toffoli_index_1: BitType, toffoli_index_2: BitType, target: BitType) -> Self {
+        Self {
+            matrix_operation: *PAULI_X,
+            operation_target: target,
+            conditional: BitType::None,
+            toffoli: (toffoli_index_1, toffoli_index_2)
         }
     }
 
@@ -90,7 +99,7 @@ impl SingleQuantumGate {
             matrix_operation: *T_GATE, 
             operation_target: target,
             conditional: BitType::None,
-            toffoli: (BitType::None, BitType::None),
+            toffoli: (BitType::None, BitType::None)
         }
     }
 
@@ -100,7 +109,7 @@ impl SingleQuantumGate {
             matrix_operation: matrix,
             operation_target: target,
             conditional: cond_bit,
-            toffoli: (toffoli_index_1, toffoli_index_2),
+            toffoli: (toffoli_index_1, toffoli_index_2)
         }
     }
 
