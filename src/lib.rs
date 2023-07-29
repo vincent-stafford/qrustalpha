@@ -148,6 +148,20 @@ pub fn execute_gate(gate: gates::SingleQuantumGate, system: StateVec) -> StateVe
 #[cfg(test)]
 mod tests {
     use crate::{StateVec, execute_gate, BitType, gates::*};
+    #[test]
+    fn create_quantum_system_1q_1c() {
+        StateVec::init(1, 1);
+    }
+
+    #[test]
+    fn create_quantum_system_100q_100c() {
+        StateVec::init(100, 100);
+    }
+
+    #[test]
+    fn create_quantum_system_100000q_100000c() {
+        StateVec::init(100000, 100000);
+    }
 
     #[test]
     #[should_panic]
