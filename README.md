@@ -39,5 +39,8 @@ fn main() {
 }
 ```
 
+Issues:
+- While Phase Shift T does not work. There seems to be an issue with taking the norm and measuring circuits with relative phase shift. This is being activly worked on.
+
 This project is also entirely for fun and research purposes. It is licensed under the GPL.
 I started this project on Monday 07/24/2023.
