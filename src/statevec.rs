@@ -44,7 +44,7 @@ impl StateVec {
     }
 
     ///Collapses a single Qubit and returns a new Quantum State with the collapsed state.
-    pub fn single_collapse(&self, q: usize) -> StateVec {
+    pub fn single_collapse(&self, q: usize) -> Self {
         self.q_is_in_bounds(q);
         let range: f64 = rand::thread_rng().gen_range(0.0..1.0);
         let mut return_vector = self.clone();
@@ -57,6 +57,11 @@ impl StateVec {
         }
         return_vector
         
+    }
+
+    pub fn norm(mut self, target_index: usize) -> Self {
+        self.qubits[target_index] = self.qubits[target_index].map(|x| x.powf(2.0));
+        self
     }
 }
 
