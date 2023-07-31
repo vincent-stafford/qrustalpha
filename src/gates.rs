@@ -15,7 +15,7 @@ lazy_static! {
                                                                      Complex::new(0.0, 1.0), Complex::new(0.0, 0.0));                                            
     ///The T phase shift gate rotates the relative phase of a state vector by PI / 4 radians. 
     pub static ref T_GATE: SingleGateMatrix = SingleGateMatrix::new(Complex::new(1.0, 0.0), Complex::new(0.0, 0.0), 
-                                                                    Complex::new(0.0, 0.0), Complex::new(0.0, E.powf(PI/4.0)));
+                                                                    Complex::new(0.0, 0.0), Complex::new((PI/4.0).cos(), (PI/4.0).sin()));
     ///Pauli Z
     pub static ref PAULI_Z: SingleGateMatrix = SingleGateMatrix::new(Complex::new(1.0, 0.0), Complex::new(0.0, 0.0), Complex::new(0.0, 0.0), Complex::new(-1.0, 0.0));
 
