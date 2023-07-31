@@ -1,4 +1,4 @@
-use std::f64::consts::{PI, E, FRAC_1_SQRT_2};
+use std::f64::consts::{PI, FRAC_1_SQRT_2};
 use crate::*;
 use lazy_static::lazy_static;
 
@@ -16,6 +16,10 @@ lazy_static! {
     ///The T phase shift gate rotates the relative phase of a state vector by PI / 4 radians. 
     pub static ref T_GATE: SingleGateMatrix = SingleGateMatrix::new(Complex::new(1.0, 0.0), Complex::new(0.0, 0.0), 
                                                                     Complex::new(0.0, 0.0), Complex::new((PI/4.0).cos(), (PI/4.0).sin()));
+
+    pub static ref S_GATE: SingleGateMatrix = SingleGateMatrix::new(Complex::new(1.0, 0.0), Complex::new(0.0, 0.0), 
+                                                                    Complex::new(0.0, 0.0), Complex::new(0.0, 1.0));
+
     ///Pauli Z
     pub static ref PAULI_Z: SingleGateMatrix = SingleGateMatrix::new(Complex::new(1.0, 0.0), Complex::new(0.0, 0.0), Complex::new(0.0, 0.0), Complex::new(-1.0, 0.0));
 
@@ -97,6 +101,15 @@ impl SingleQuantumGate {
     pub fn t_gate(target: BitType) -> Self {
         Self {
             matrix_operation: *T_GATE, 
+            operation_target: target,
+            conditional: BitType::None,
+            toffoli: (BitType::None, BitType::None)
+        }
+    }
+
+    pub fn s_gate(target: BitType) -> Self {
+        Self {
+            matrix_operation: *S_GATE, 
             operation_target: target,
             conditional: BitType::None,
             toffoli: (BitType::None, BitType::None)

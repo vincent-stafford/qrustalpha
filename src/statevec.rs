@@ -59,7 +59,7 @@ impl StateVec {
         
     }
 
-    pub fn get_probability(mut self, target_index: usize) -> Self {
+    pub fn get_probability(self, target_index: usize) -> Self {
         // self.qubits[target_index] = self.qubits[target_index].map(|x| x.powf(2.0));
         self.qubits[target_index].x.norm_sqr();
         self.qubits[target_index].y.norm_sqr();
