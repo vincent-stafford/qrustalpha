@@ -1,5 +1,5 @@
 use qrustalpha::BitType;
-use qrustalpha::gates::SingleQuantumGate;
+use qrustalpha::gates::single_qubit_gates::SingleQuantumGate;
 use qrustalpha::statevec::StateVec;
 use qrustalpha::executor::execute_gate;
 
