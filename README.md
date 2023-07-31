@@ -5,10 +5,11 @@ The reason for doing so is to help me grasp the fundamental concepts behind the 
 This project is in extremly early alpha and is not ready for production whatsoever. 
 
 Features implemented so far:
-- Basic Gates (Pauli X, Pauli Y, Pauli Z, Hadamard, CNOT, and Toffoli gates)
+- Basic Gates (Pauli X, Pauli Y, Pauli Z, Hadamard, CNOT, Toffoli, and phase shift T + S gates)
 - Quantum Circuits containing any number and combination of classical and quantum registers
 - Measuring and gate execution circuits
 - Basic Circuit Sanity testing
+- Benchmarking large qubit systems
 - Constructor for making custom gates (untested and without validation)
 - Relative phase (untested)
 
@@ -17,7 +18,6 @@ Here are some planned features:
 - Implementation of Quantum Oracles (The secret sauce in Deutsch's algorithm)
 - Gates that act on multiple qubits
 - More single qubit quantum gates
-- Testing for the purposes of benchmarking the simulator
 - Example files providing extensive examples of the library and basic quantum algorithms,
 
 
@@ -40,7 +40,7 @@ fn main() {
 ```
 
 Issues:
-- While Phase Shift T does not work. There seems to be an issue with taking the norm and measuring circuits with relative phase shift. This is being activly worked on.
+- Phase shifts now work nearly as intended. It is still not fully tested and there may be bugs. 
 
 This project is also entirely for fun and research purposes. It is licensed under the GPL.
 I started this project on Monday 07/24/2023.
