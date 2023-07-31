@@ -17,8 +17,13 @@ lazy_static! {
     pub static ref T_GATE: SingleGateMatrix = SingleGateMatrix::new(Complex::new(1.0, 0.0), Complex::new(0.0, 0.0), 
                                                                     Complex::new(0.0, 0.0), Complex::new((PI/4.0).cos(), (PI/4.0).sin()));
 
+    ///S Gate rotates the S gate along the Z axis by 90 degrees
     pub static ref S_GATE: SingleGateMatrix = SingleGateMatrix::new(Complex::new(1.0, 0.0), Complex::new(0.0, 0.0), 
                                                                     Complex::new(0.0, 0.0), Complex::new(0.0, 1.0));
+    
+    ///Conjugate transpose of the S gate
+    pub static ref S_DAGGER_GATE: SingleGateMatrix = SingleGateMatrix::new(Complex::new(1.0, 0.0), Complex::new(0.0, 0.0), 
+                                                                    Complex::new(0.0, 0.0), Complex::new(0.0, -1.0));
 
     ///Pauli Z
     pub static ref PAULI_Z: SingleGateMatrix = SingleGateMatrix::new(Complex::new(1.0, 0.0), Complex::new(0.0, 0.0), Complex::new(0.0, 0.0), Complex::new(-1.0, 0.0));
@@ -110,6 +115,15 @@ impl SingleQuantumGate {
     pub fn s_gate(target: BitType) -> Self {
         Self {
             matrix_operation: *S_GATE, 
+            operation_target: target,
+            conditional: BitType::None,
+            toffoli: (BitType::None, BitType::None)
+        }
+    }
+
+    pub fn inv_s_gate(target: BitType) -> Self {
+        Self {
+            matrix_operation: *S_DAGGER_GATE, 
             operation_target: target,
             conditional: BitType::None,
             toffoli: (BitType::None, BitType::None)
