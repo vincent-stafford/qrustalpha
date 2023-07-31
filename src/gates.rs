@@ -3,6 +3,7 @@ use crate::*;
 use lazy_static::lazy_static;
 
 pub mod single_qubit_gates;
+pub mod multi_qubit_gates;
 ///This is a public type declaration used for any single-qubit gate.
 pub type SingleGateMatrix = SMatrix<Complex<f64>, 2, 2>;
 
