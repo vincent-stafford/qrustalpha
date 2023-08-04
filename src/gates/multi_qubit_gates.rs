@@ -15,5 +15,19 @@ lazy_static! {
 pub struct MultiQuantumGate<const N: usize> {
     pub matrix_operation: MultiQubitMatrix<N>,
     pub operation_target: Vec<BitType>,
-    qubit_count: usize,
+    pub qubit_indicies: Vec<BitType>
+}
+
+impl MultiQuantumGate<2> {
+
+}
+
+impl MultiQuantumGate<4> {
+    pub fn swap(op_vector: Vec<BitType>) -> Self {
+        Self {
+            matrix_operation: *SWAP,
+            operation_target: op_vector.clone(),
+            qubit_indicies: op_vector,
+        }
+    }
 }
