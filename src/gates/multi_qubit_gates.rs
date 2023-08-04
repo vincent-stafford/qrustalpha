@@ -18,16 +18,26 @@ pub struct MultiQuantumGate<const N: usize> {
     pub qubit_indicies: Vec<BitType>
 }
 
-impl MultiQuantumGate<2> {
-
+impl <const N: usize> MultiQuantumGate<N> {
+    fn sanity_check(&self, start_qubits_len: usize, end_qubits_len: usize) {
+        if start_qubits_len != end_qubits_len {
+            panic!("A Quantum Gate must be reversible.")
+        }
+        if start_qubits_len != self.matrix_operation.column(0).len() {
+            panic!("You are giving an incorrect number of inputs for the size of the matrix")
+        }
+        ()
+    }
 }
 
 impl MultiQuantumGate<4> {
-    pub fn swap(op_vector: Vec<BitType>) -> Self {
+    pub fn swap(self, op_vector: Vec<BitType>) -> Self {
         Self {
             matrix_operation: *SWAP,
             operation_target: op_vector.clone(),
-            qubit_indicies: op_vector,
-        }
+            qubit_indicies: op_vector.clone(),
+        };
+        let _ = &self.sanity_check(op_vector.len(), op_vector.len());
+        self
     }
 }
